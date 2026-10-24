@@ -45,10 +45,43 @@
   <!-- 物理演算ライブラリ -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.20.0/matter.min.js"></script>
 
-  <!-- キャラデータを先に読み込む -->
-  <script src="characters.js"></script>
+  <
+<script src="characters.js"></script>
 
-  <!-- ゲームの動作を読み込む -->
-  <script src="game.js"></script>
+<!-- 進化一覧の表示 -->
+<script>
+  const evolutionList = document.getElementById("evolution-list");
+
+  characters.forEach((character) => {
+    const item = document.createElement("div");
+    item.className = "evolution-item";
+
+    const stage = document.createElement("div");
+    stage.className = "evolution-stage";
+    stage.textContent = `第${character.stage}段階`;
+
+    const image = document.createElement("img");
+    image.className = "evolution-image";
+    image.src = character.image;
+    image.alt = character.motif;
+    image.onerror = () => {
+      image.style.display = "none";
+    };
+
+    const name = document.createElement("div");
+    name.className = "evolution-name";
+    name.textContent = character.name;
+
+    const motif = document.createElement("div");
+    motif.className = "evolution-motif";
+    motif.textContent = character.motif;
+
+    item.append(stage, image, name, motif);
+    evolutionList.appendChild(item);
+  });
+</script>
+
+<script src="game.js"></script>
+
 </body>
 </html>
