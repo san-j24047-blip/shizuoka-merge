@@ -37,27 +37,27 @@ button { cursor: pointer; }
 .game-container > h1 { margin: 0 0 3px; color: #477b43; font-size: clamp(22px, 2.5vh, 30px); line-height: 1.25; }
 .game-container > p { margin: 0 0 8px; color: #71816c; font-size: 13px; }
 .game-layout {
-  display: grid; grid-template-columns: minmax(260px, 320px) minmax(260px, min(500px, calc((100dvh - 110px) * .7143), calc(100vw - 600px))) minmax(140px, 180px);
+  display: grid; grid-template-columns: minmax(340px, min(640px, calc(100vw - 760px))) minmax(260px, min(500px, calc((100dvh - 110px) * .7143), calc(100vw - 600px))) minmax(140px, 180px);
   gap: clamp(10px, 1.5vw, 22px); align-items: center; justify-content: center;
   width: 100%; max-width: 1440px; min-height: 0; flex: 1;
 }
 .evolution-area {
-  position: relative; width: 100%; height: min(74vh, 500px); min-height: 300px; padding: 10px 6px;
+  position: relative; width: 100%; height: min(82vh, 740px); min-height: 340px; padding: 12px 8px;
   overflow: hidden; background: white; border: 2px solid #d9e9ca; border-radius: 20px;
   box-shadow: 0 8px 24px #395c3514;
 }
 .evolution-area h2 { position: relative; z-index: 2; margin: 0; color: #477b43; font-size: 19px; }
-#evolution-list { position: absolute; inset: 36px 0 4px; }
+#evolution-list { position: absolute; inset: 46px 0 8px; }
 .evolution-item {
   position: absolute; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px;
-  width: 72px; height: 78px; padding: 3px; overflow: hidden; transform: translate(-50%, -50%);
+  width: 92px; height: 104px; padding: 5px; overflow: hidden; transform: translate(-50%, -50%);
   background: #f7faf2; border: 1px solid #dceacb; border-radius: 12px;
 }
-.evolution-stage { color: #628358; font-size: 9px; line-height: 1; }
-.evolution-image { display: block; flex: none; width: 34px; height: 34px; object-fit: contain; }
+.evolution-stage { color: #628358; font-size: 12px; line-height: 1.1; }
+.evolution-image { display: block; flex: none; width: 48px; height: 48px; object-fit: contain; }
 .evolution-name, .evolution-motif { width: 100%; overflow-wrap: anywhere; line-height: 1.08; }
-.evolution-name { color: #35443a; font-size: 9px; font-weight: bold; }
-.evolution-motif { color: #71816c; font-size: 8px; }
+.evolution-name { color: #35443a; font-size: 12px; font-weight: bold; }
+.evolution-motif { color: #71816c; font-size: 10px; }
 
 .game-area {
   position: relative; width: 100%; max-width: 500px; justify-self: center; overflow: hidden;
@@ -99,7 +99,12 @@ button { cursor: pointer; }
   .game-area { grid-column: 1; grid-row: 1; width: min(100%, calc((100dvh - 360px) * .7143)); max-height: calc(100dvh - 360px); }
   .game-sidebar { grid-column: 2; grid-row: 1; }
   .game-info { gap: 8px; }
-  .evolution-area { grid-column: 1 / -1; grid-row: 2; width: min(100%, 390px); height: 100%; min-height: 0; justify-self: center; }
+  .evolution-area { grid-column: 1 / -1; grid-row: 2; width: min(100%, 420px); height: 100%; min-height: 0; justify-self: center; }
+  .evolution-item { width: 62px; height: 68px; }
+  .evolution-image { width: 30px; height: 30px; }
+  .evolution-stage { font-size: 9px; }
+  .evolution-name { font-size: 9px; }
+  .evolution-motif { font-size: 8px; }
   #evolution-list { inset: 36px 0 4px; }
 }
 @media (max-width: 520px) {
@@ -129,6 +134,14 @@ button { cursor: pointer; }
 }
 
 
+
+
+
+
+/* 進化一覧ではデバッグ用の当たり判定キャンバスを隠し、元画像を全体表示 */
+.evolution-item > canvas {
+  display: none;
+}
 
 
 

@@ -15,7 +15,7 @@ const characters = [
     name: "島田市",
     motif: "お茶羊羹",
     radius: 24,
-    image: "images/shimada.png",
+    image: "images/ﾖｳｶﾝ-7.png",
     nextId: 3
   },
   {
@@ -24,7 +24,7 @@ const characters = [
     name: "熱海市",
     motif: "熱海プリン",
     radius: 30,
-    image: "images/atami.png",
+    image: "images/熱海プリン.png",
     nextId: 4
   },
   {
@@ -33,7 +33,7 @@ const characters = [
     name: "御殿場市",
     motif: "どら焼き",
     radius: 37,
-    image: "images/gotemba.png",
+    image: "images/どら焼き-10.png",
     nextId: 5
   },
   {
@@ -42,7 +42,7 @@ const characters = [
     name: "三島市",
     motif: "ロングロールケーキ",
     radius: 44,
-    image: "images/mishima.png",
+    image: "images/ﾛｰﾙｹｰｷ.png",
     nextId: 6
   },
   {
@@ -51,16 +51,16 @@ const characters = [
     name: "焼津市",
     motif: "鰹節",
     radius: 52,
-    image: "images/yaizu.png",
+    image: "images/かっつー-6.png",
     nextId: 7
   },
   {
     id: 7,
     stage: 7,
     name: "沼津市",
-    motif: "深海博物館",
+    motif: "干物",
     radius: 61,
-    image: "images/numazu.png",
+    image: "images/干物.png",
     nextId: 8
   },
   {
@@ -76,9 +76,9 @@ const characters = [
     id: 9,
     stage: 9,
     name: "静岡市",
-    motif: "駿府城",
+    motif: "はんぺん",
     radius: 82,
-    image: "images/shizuoka.png",
+    image: "images/はんぺん.png",
     nextId: 10
   },
   {

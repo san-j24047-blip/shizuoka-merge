@@ -147,8 +147,10 @@
 
       item.append(stage, image, name, motif);
       const angle = (2 * Math.PI * (character.stage - 1)) / characters.length - Math.PI / 2;
-      item.style.left = `${50 + 39 * Math.cos(angle)}%`;
-      item.style.top = `${50 + 39 * Math.sin(angle)}%`;
+      const radiusX = 42;
+      const radiusY = 40;
+      item.style.left = `${50 + radiusX * Math.cos(angle)}%`;
+      item.style.top = `${50 + radiusY * Math.sin(angle)}%`;
       evolutionList.appendChild(item);
     });
   </script>

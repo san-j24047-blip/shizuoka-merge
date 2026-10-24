@@ -6,7 +6,7 @@ const HEIGHT = canvas.height;
 const DROP_Y = 48;
 const GAME_OVER_Y = 65;
 const DROP_INTERVAL = 450;
-const SMALL_CHARACTER_COUNT = 3;
+const SMALL_CHARACTER_COUNT = 5;
 
 const charactersById = new Map(characters.map((c) => [c.id, c]));
 
@@ -17,7 +17,7 @@ let pointerX = WIDTH / 2;
 let lastDropTime = 0;
 let gameOver = false;
 let lastFrameTime = 0;
-let debugShapes = true; // D キーで切り替え
+let debugShapes = false; // D キーで当たり判定を一時表示
 
 /* =========================
    画像の読み込み
@@ -342,3 +342,6 @@ window.addEventListener("load", () => {
       requestAnimationFrame(gameLoop);
     });
 });
+
+
+
