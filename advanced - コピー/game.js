@@ -1,0 +1,341 @@
+const canvas = document.getElementById("game-canvas");
+const ctx = canvas.getContext("2d");
+
+const WIDTH = canvas.width;
+const HEIGHT = canvas.height;
+const DROP_Y = 48;
+const GAME_OVER_Y = 65;
+const DROP_INTERVAL = 450;
+const SMALL_CHARACTER_COUNT = 3;
+
+const charactersById = new Map(characters.map((c) => [c.id, c]));
+
+let score = 0;
+let currentId = 0;
+let nextId = 0;
+let pointerX = WIDTH / 2;
+let lastDropTime = 0;
+let gameOver = false;
+let lastFrameTime = 0;
+let debugShapes = true; // D キーで切り替え
+
+/* =========================
+   画像の読み込み
+========================= */
+
+const imageCache = new Map();
+const shapes = new Map(); // id → 円のリスト
+
+function loadImage(src) {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.onload = () => resolve(img);
+    img.onerror = () => {
+      console.warn("画像を読み込めません:", src);
+      resolve(null);
+    };
+    img.src = src;
+  });
+}
+
+async function loadAssets() {
+  await Promise.all(
+    characters.map(async (character) => {
+      try {
+        const img = await loadImage(character.image);
+        if (!img) return;
+        imageCache.set(character.id, img);
+
+        // 形を解析（もしセキュリティ制限で失敗しても、フォールバックで通常の丸を生成する）
+        const circles = Shape.fromImage(img, character.radius * 2);
+        if (circles) {
+          shapes.set(character.id, circles);
+        } else {
+          // 【安全対策】解析に失敗した場合は、キャラクターの半径の円を1つだけ登録して続行させる
+          shapes.set(character.id, [{ x: 0, y: 0, r: character.radius }]);
+        }
+      } catch (e) {
+        // 万が一エラーが出てもゲームを止めない
+        shapes.set(character.id, [{ x: 0, y: 0, r: character.radius }]);
+      }
+    })
+  );
+}
+
+/* =========================
+   進化一覧に円つきプレビュー
+========================= */
+
+function addShapePreviews() {
+  const items = document.querySelectorAll(".evolution-item");
+  characters.forEach((character, i) => {
+    const item = items[i];
+    const img = imageCache.get(character.id);
+    if (!item || !img) return;
+
+    const S = 96;
+    const c = document.createElement("canvas");
+    c.width = S;
+    c.height = S;
+    const g = c.getContext("2d");
+    const k = S / (character.radius * 2);
+    const off = shapes.get(character.id)?.imageOffset ?? { x: 0, y: 0 };
+
+    g.translate(S / 2 - off.x * k, S / 2 - off.y * k); // 画像中心が中央に来るよう移動
+    const s = Math.min(S / img.width, S / img.height);
+    const w = img.width * s, h = img.height * s;
+    g.drawImage(img, -w / 2 + off.x * k, -h / 2 + off.y * k, w, h);
+
+    // 円は重心基準なので、重心が原点になるよう戻して描く
+    g.setTransform(1, 0, 0, 1, S / 2 - off.x * k, S / 2 - off.y * k);
+    drawShapeCircles(g, shapes.get(character.id), k);
+    item.appendChild(c);
+  });
+}
+
+/* =========================
+   ゲーム進行
+========================= */
+
+function getCharacter(id) {
+  return charactersById.get(id);
+}
+
+function randomSmallCharacterId() {
+  return characters[Math.floor(Math.random() * SMALL_CHARACTER_COUNT)].id;
+}
+
+function handleMerge(newCharacter) {
+  score += newCharacter.score ?? newCharacter.stage;
+  updateScore();
+}
+
+function dropCharacter() {
+  if (gameOver) return;
+
+  const now = performance.now();
+  if (now - lastDropTime < DROP_INTERVAL) return;
+
+  Physics.spawn(currentId, pointerX, DROP_Y);
+  lastDropTime = now;
+
+  currentId = nextId;
+  nextId = randomSmallCharacterId();
+  updatePreview();
+}
+
+function checkGameOver() {
+  if (Physics.hasBodyAboveLine(GAME_OVER_Y)) endGame();
+}
+
+function endGame() {
+  if (gameOver) return;
+  gameOver = true;
+  document.getElementById("final-score").textContent = score;
+  document.getElementById("game-over").classList.remove("hidden");
+}
+
+/* =========================
+   UI更新
+========================= */
+
+function updateScore() {
+  document.getElementById("score").textContent = score;
+}
+
+function updatePreview() {
+  document.getElementById("next-character").textContent = getCharacter(nextId).name;
+}
+
+/* =========================
+   描画
+========================= */
+
+function clampX(x, radius) {
+  return Math.max(radius, Math.min(WIDTH - radius, x));
+}
+
+function drawShapeCircles(g, circles, scale = 1) {
+  if (!circles) return;
+  g.save();
+  g.lineWidth = 1;
+  g.strokeStyle = "rgba(255, 0, 0, 0.9)";
+  g.fillStyle = "rgba(255, 0, 0, 0.18)";
+  for (const c of circles) {
+    g.beginPath();
+    g.arc(c.x * scale, c.y * scale, c.r * scale, 0, Math.PI * 2);
+    g.fill();
+    g.stroke();
+  }
+  // 重心(=ボディの位置)
+  g.fillStyle = "rgba(0, 0, 255, 0.9)";
+  g.beginPath();
+  g.arc(0, 0, 2, 0, Math.PI * 2);
+  g.fill();
+  g.restore();
+}
+
+function draw() {
+  ctx.clearRect(0, 0, WIDTH, HEIGHT);
+
+  ctx.fillStyle = "#e7f4fa";
+  ctx.fillRect(0, 0, WIDTH, HEIGHT);
+
+  ctx.save();
+  ctx.setLineDash([7, 5]);
+  ctx.strokeStyle = "#e18b83";
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(0, GAME_OVER_Y);
+  ctx.lineTo(WIDTH, GAME_OVER_Y);
+  ctx.stroke();
+  ctx.restore();
+
+  if (!gameOver) {
+    const character = getCharacter(currentId);
+    const x = clampX(pointerX, character.radius);
+
+    ctx.save();
+    ctx.strokeStyle = "#8aa7b2";
+    ctx.setLineDash([4, 5]);
+    ctx.beginPath();
+    ctx.moveTo(x, DROP_Y + character.radius);
+    ctx.lineTo(x, HEIGHT - 5);
+    ctx.stroke();
+    ctx.restore();
+
+    drawCharacter(character, x, DROP_Y, 0.75);
+  }
+
+  for (const s of Physics.getCharacterStates()) {
+    drawCharacter(getCharacter(s.id), s.x, s.y, 1, s.angle);
+  }
+}
+
+// x, y はボディの位置(= 円の重心)
+function drawCharacter(character, x, y, scale = 1, angle = 0) {
+  const r = character.radius * scale;
+  const img = imageCache.get(character.id);
+  const circles = shapes.get(character.id);
+  const off = circles?.imageOffset ?? { x: 0, y: 0 };
+
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.rotate(angle);
+
+  if (img) {
+    // 長辺が 2r になるよう縦横比を保って縮小(shape.js と同じ)
+    const s = Math.min((r * 2) / img.width, (r * 2) / img.height);
+    const w = img.width * s;
+    const h = img.height * s;
+    // 画像の中心は重心から imageOffset だけずれた位置
+    ctx.drawImage(img, off.x * scale - w / 2, off.y * scale - h / 2, w, h);
+  } else {
+    ctx.beginPath();
+    ctx.arc(0, 0, r, 0, Math.PI * 2);
+    ctx.fillStyle = "#ffffff";
+    ctx.fill();
+    ctx.strokeStyle = "#b7d5c2";
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    ctx.fillStyle = "#35443a";
+    ctx.font = `bold ${r * 0.9}px sans-serif`;
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText(character.name[0], 0, 1);
+  }
+
+  if (debugShapes) {
+    if (circles) {
+      drawShapeCircles(ctx, circles, scale);
+    } else {
+      // 円の生成に失敗したキャラは、オレンジの点線の円で目印を出す
+      ctx.save();
+      ctx.strokeStyle = "orange";
+      ctx.setLineDash([3, 3]);
+      ctx.beginPath();
+      ctx.arc(0, 0, r, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.restore();
+    }
+  }
+
+  ctx.restore();
+}
+
+/* =========================
+   入力
+========================= */
+
+function updatePointer(event) {
+  const rect = canvas.getBoundingClientRect();
+  const x = (event.clientX - rect.left) * (WIDTH / rect.width);
+  pointerX = clampX(x, getCharacter(currentId).radius);
+}
+
+canvas.addEventListener("pointermove", updatePointer);
+
+canvas.addEventListener("pointerdown", (event) => {
+  event.preventDefault();
+  updatePointer(event);
+  dropCharacter();
+});
+
+document.getElementById("restart-button").addEventListener("click", startGame);
+
+window.addEventListener("keydown", (e) => {
+  if (e.code === "KeyD") debugShapes = !debugShapes;
+});
+
+/* =========================
+   メインループ
+========================= */
+
+function gameLoop(time) {
+  const delta = lastFrameTime ? Math.min(time - lastFrameTime, 33.333) : 1000 / 60;
+  lastFrameTime = time;
+
+  if (!gameOver) {
+    Physics.update(delta);
+    checkGameOver();
+  }
+
+  draw();
+  requestAnimationFrame(gameLoop);
+}
+
+function startGame() {
+  score = 0;
+  gameOver = false;
+  lastDropTime = 0;
+  lastFrameTime = 0;
+  pointerX = WIDTH / 2;
+
+  currentId = randomSmallCharacterId();
+  nextId = randomSmallCharacterId();
+
+  document.getElementById("game-over").classList.add("hidden");
+
+  updateScore();
+  updatePreview();
+
+  Physics.init({
+    width: WIDTH,
+    height: HEIGHT,
+    characters,
+    shapes,
+    onMerge: handleMerge
+  });
+}
+
+// 起動は画像の読み込み後に1回だけ
+window.addEventListener("load", () => {
+  loadAssets()
+    .catch((e) => console.error(e))
+    .finally(() => {
+      addShapePreviews();
+      startGame();
+      requestAnimationFrame(gameLoop);
+    });
+});

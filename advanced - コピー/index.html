@@ -1,0 +1,87 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>静岡県スイカゲーム</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="game-container">
+    <h1>静岡県スイカゲーム</h1>
+    <p>同じキャラをくっつけて進化させよう！</p>
+
+    <section class="game-info">
+      <div class="score-area">
+        <span>スコア</span>
+        <span id="score">0</span>
+      </div>
+
+      <div class="next-area">
+        <span>つぎのキャラ</span>
+        <div id="next-character">準備中</div>
+      </div>
+    </section>
+
+    <section class="game-area">
+      <canvas id="game-canvas" width="420" height="600">
+        お使いのブラウザはCanvasに対応していません。
+      </canvas>
+
+      <div id="game-over" class="game-over hidden">
+        <h2>ゲームオーバー</h2>
+        <p>最終スコア：<span id="final-score">0</span></p>
+        <button id="restart-button">もう一度遊ぶ</button>
+      </div>
+    </section>
+
+    <section class="evolution-area">
+      <h2>進化一覧</h2>
+      <div id="evolution-list"></div>
+    </section>
+  </main>
+
+  <!-- 物理演算ライブラリ -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.20.0/matter.min.js"></script>
+<script src="characters.js"></script>
+
+<!-- 進化一覧の表示 -->
+<script>
+  const evolutionList = document.getElementById("evolution-list");
+
+  characters.forEach((character) => {
+    const item = document.createElement("div");
+    item.className = "evolution-item";
+
+    const stage = document.createElement("div");
+    stage.className = "evolution-stage";
+    stage.textContent = `第${character.stage}段階`;
+
+    const image = document.createElement("img");
+    image.className = "evolution-image";
+    image.src = character.image;
+    image.alt = character.motif;
+    image.onerror = () => {
+      image.style.display = "none";
+    };
+
+    const name = document.createElement("div");
+    name.className = "evolution-name";
+    name.textContent = character.name;
+
+    const motif = document.createElement("div");
+    motif.className = "evolution-motif";
+    motif.textContent = character.motif;
+
+    item.append(stage, image, name, motif);
+    evolutionList.appendChild(item);
+  });
+</script>
+
+<script src="shape.js"></script>
+ <script src="physics.js"></script>
+<script src="game.js"></script>
+
+</body>
+</html>
