@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 3470 3534" preserveAspectRatio="none">
+  <defs>
+    <linearGradient id="sideL" x1="0" x2="1">
+      <stop offset="0" stop-color="#315f5e" stop-opacity=".20"/>
+      <stop offset=".48" stop-color="#315f5e" stop-opacity=".08"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity=".10"/>
+    </linearGradient>
+    <linearGradient id="sideR" x1="1" x2="0">
+      <stop offset="0" stop-color="#315f5e" stop-opacity=".20"/>
+      <stop offset=".48" stop-color="#315f5e" stop-opacity=".08"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity=".10"/>
+    </linearGradient>
+    <linearGradient id="floor" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff" stop-opacity=".24"/>
+      <stop offset=".20" stop-color="#ffffff" stop-opacity=".08"/>
+      <stop offset="1" stop-color="#286e68" stop-opacity=".16"/>
+    </linearGradient>
+    <linearGradient id="front" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff" stop-opacity=".28"/>
+      <stop offset=".35" stop-color="#ffffff" stop-opacity="0"/>
+      <stop offset="1" stop-color="#286e68" stop-opacity=".12"/>
+    </linearGradient>
+  </defs>
+  <image href="game-frame-open-top.png" width="3470" height="3534"/>
+  <!-- Gentle tonal shading makes the existing side planes and floor read as a 3D box. -->
+  <path d="M0 70H338V3095L78 3534H0Z" fill="url(#sideL)"/>
+  <path d="M3090 70H3470V3534H3390L3090 3095Z" fill="url(#sideR)"/>
+  <path d="M338 3095H3090L3470 3534H0Z" fill="url(#floor)"/>
+  <!-- Soft contact shadows and narrow highlights clarify the inside corners. -->
+  <path d="M338 120V3095" fill="none" stroke="#174e4b" stroke-opacity=".17" stroke-width="18"/>
+  <path d="M3090 120V3095" fill="none" stroke="#174e4b" stroke-opacity=".17" stroke-width="18"/>
+  <path d="M338 3095H3090" fill="none" stroke="#ffffff" stroke-opacity=".42" stroke-width="16"/>
+  <path d="M45 3530L338 3095M3425 3530L3090 3095" fill="none" stroke="#ffffff" stroke-opacity=".27" stroke-width="12"/>
+  <path d="M45 3530H3425" fill="none" stroke="url(#front)" stroke-width="90"/>
+</svg>
