@@ -1,160 +1,240 @@
+
+/* =========================
+   全体の設定
+========================= */
+
 * {
   box-sizing: border-box;
 }
 
 body {
   margin: 0;
-  padding: 20px 12px;
-  font-family: sans-serif;
-  color: #263238;
-  background: #f0f7ef;
+  padding: 24px 16px;
+  font-family:
+    "Noto Sans JP",
+    "Yu Gothic",
+    Meiryo,
+    sans-serif;
+  color: #35443a;
+  background: #f3f8ed;
+  text-align: center;
 }
 
-.app {
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+/* =========================
+   ゲーム全体
+========================= */
+
+.game-container {
   width: 100%;
   max-width: 560px;
   margin: 0 auto;
-}
-
-header {
-  text-align: center;
-  margin-bottom: 18px;
+  padding: 24px 20px;
+  background: #ffffff;
+  border: 3px solid #d9e9ca;
+  border-radius: 24px;
+  box-shadow: 0 8px 24px rgba(57, 92, 53, 0.10);
 }
 
 h1 {
-  font-size: 25px;
-  margin-bottom: 8px;
+  margin: 0 0 8px;
+  color: #477b43;
+  font-size: clamp(24px, 5vw, 32px);
 }
 
-header p {
-  color: #60746a;
+.game-container > p {
+  margin: 0 0 22px;
+  color: #71816c;
   font-size: 14px;
 }
 
-.status {
+/* =========================
+   スコア・次のキャラ
+========================= */
+
+.game-info {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: stretch;
   gap: 12px;
-  padding: 12px 16px;
-  margin-bottom: 10px;
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px #0000000d;
+  margin-bottom: 16px;
 }
 
-.status strong {
-  margin-left: 6px;
-  color: #23834b;
-  font-size: 22px;
+.score-area,
+.next-area {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: center;
+  gap: 8px;
+  min-width: 0;
+  padding: 14px 10px;
+  background: #f1f7e9;
+  border: 2px solid #dceacb;
+  border-radius: 16px;
+}
+
+.score-area span:first-child,
+.next-area > span {
+  color: #61755a;
+  font-size: 13px;
+  font-weight: bold;
+}
+
+#score {
+  color: #3e793b;
+  font-size: 30px;
+  font-weight: bold;
+  font-variant-numeric: tabular-nums;
 }
 
 #next-character {
-  display: inline-block;
-  margin-left: 6px;
-  font-size: 30px;
-  vertical-align: middle;
+  min-height: 30px;
+  color: #3e793b;
+  font-size: 20px;
+  font-weight: bold;
 }
 
-.game-wrap {
+/* =========================
+   ゲーム画面
+========================= */
+
+.game-area {
   position: relative;
   width: 100%;
+  max-width: 420px;
+  margin: 0 auto;
   overflow: hidden;
-  border: 3px solid #75a783;
-  border-radius: 12px;
-  background: #e7f4fa;
+  background: #fffdf5;
+  border: 3px solid #b7d5a2;
+  border-radius: 14px;
+  line-height: 0;
 }
 
-#game {
+#game-canvas {
   display: block;
   width: 100%;
   height: auto;
-  touch-action: none;
+  background: #fffdf5;
+  touch-action: manipulation;
 }
 
-.help {
-  text-align: center;
-  font-size: 13px;
-  line-height: 1.7;
-  color: #53665b;
-}
-
-.evolution {
-  margin-top: 24px;
-  padding: 16px;
-  border-radius: 12px;
-  background: white;
-}
-
-.evolution h2 {
-  margin-top: 0;
-  font-size: 18px;
-}
-
-#evolution-list {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 8px;
-}
-
-.evolution-item {
-  padding: 10px;
-  border: 1px solid #e0e9e1;
-  border-radius: 8px;
-  text-align: center;
-  font-size: 13px;
-}
-
-.evolution-item .icons {
-  font-size: 22px;
-  margin-bottom: 4px;
-}
+/* =========================
+   ゲームオーバー画面
+========================= */
 
 .game-over {
   position: absolute;
   inset: 0;
+  z-index: 10;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background: #ffffffed;
-  text-align: center;
+  gap: 14px;
   padding: 20px;
+  background: rgba(255, 253, 245, 0.94);
+  line-height: 1.5;
 }
 
 .game-over h2 {
-  margin-bottom: 4px;
+  margin: 0;
+  color: #477b43;
+  font-size: 28px;
 }
+
+.game-over p {
+  margin: 0;
+  font-size: 18px;
+}
+
+#restart-button {
+  padding: 12px 24px;
+  color: #ffffff;
+  background: #5c9a50;
+  border: none;
+  border-radius: 999px;
+  font-size: 16px;
+  font-weight: bold;
+  box-shadow: 0 4px 0 #3f7838;
+  transition: transform 0.15s, background 0.15s;
+}
+
+#restart-button:hover {
+  background: #4b8842;
+  transform: translateY(-2px);
+}
+
+#restart-button:active {
+  transform: translateY(2px);
+  box-shadow: none;
+}
+
+/* ゲームオーバー画面を隠す */
 
 .hidden {
-  display: none;
+  display: none !important;
 }
 
-button {
-  padding: 12px 20px;
-  border: none;
-  border-radius: 8px;
-  background: #26854d;
-  color: white;
-  font-size: 16px;
-  cursor: pointer;
+/* =========================
+   進化一覧
+========================= */
+
+.evolution-area {
+  margin-top: 24px;
+  text-align: left;
 }
 
-button:hover {
-  background: #196b3b;
+.evolution-area h2 {
+  margin: 0 0 12px;
+  padding-left: 10px;
+  color: #477b43;
+  border-left: 5px solid #8fbd70;
+  font-size: 20px;
 }
 
-@media (max-width: 420px) {
+#evolution-list {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+/* =========================
+   スマートフォン対応
+========================= */
+
+@media (max-width: 480px) {
   body {
     padding: 12px 8px;
   }
 
-  h1 {
-    font-size: 20px;
+  .game-container {
+    padding: 18px 12px;
+    border-radius: 18px;
   }
 
-  .status {
-    padding: 10px;
-    font-size: 14px;
+  .game-info {
+    gap: 8px;
+  }
+
+  .score-area,
+  .next-area {
+    padding: 12px 6px;
+  }
+
+  #score {
+    font-size: 26px;
+  }
+
+  #next-character {
+    font-size: 17px;
+  }
+
+  #evolution-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
