@@ -69,7 +69,7 @@ const characters = [
     name: "富士市",
     motif: "田子の浦しらす",
     radius: 71,
-    image: "images/fuji.png",
+    image: "images/しらす.png",
     nextId: 9
   },
   {
@@ -87,7 +87,7 @@ const characters = [
     name: "浜松市",
     motif: "ピアノ",
     radius: 94,
-    image: "images/hamamatsu.png",
+    image: "images/餃子.png",
     nextId: 11
   },
   {
