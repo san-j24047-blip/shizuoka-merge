@@ -8,6 +8,45 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <!-- スタート画面 -->
+<section id="menu-screen" class="screen menu-screen">
+    <div class="menu-panel">
+        <p class="menu-subtitle">SHIZUOKA PREFECTURE</p>
+        <h1>静岡県スイカゲーム</h1>
+        <p class="menu-description">
+            静岡の名物を育てて、目指せ富士山！
+        </p>
+
+        <div class="menu-buttons">
+            <button id="start-button" class="menu-button start-button">
+                ゲームスタート
+            </button>
+
+            <button id="ranking-button" class="menu-button ranking-button">
+                ランキング
+            </button>
+        </div>
+    </div>
+</section>
+
+<!-- ランキング画面（現時点では仮表示） -->
+<section id="ranking-screen" class="screen ranking-screen" hidden>
+    <div class="menu-panel">
+        <h2>ランキング</h2>
+        <p>オンラインランキングは後から接続するよ！</p>
+
+        <div id="ranking-list">
+            <p class="ranking-placeholder">
+                まだランキングデータがありません。
+            </p>
+        </div>
+
+        <button id="back-button" class="menu-button ranking-button">
+            メニューに戻る
+        </button>
+    </div>
+</section>
+  <section id="game-screen" class="screen" hidden>
   <main class="game-container">
     <h1>静岡県スイカゲーム</h1>
     <p>同じキャラをくっつけて進化させよう！</p>
@@ -41,11 +80,21 @@
       <div id="evolution-list"></div>
     </section>
   </main>
+  </section>
 
   <!-- 物理演算ライブラリ -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.20.0/matter.min.js"></script>
 
+
+  
 <script src="characters.js"></script>
+
+<!-- 新しく追加 -->
+<script src="menu.js"></script>
+
+<!-- Aさん担当のゲーム本体 -->
+<script src="game.js"></script>
+
 
 <!-- 進化一覧の表示 -->
 <script>
@@ -79,8 +128,6 @@
     evolutionList.appendChild(item);
   });
 </script>
-
-<script src="game.js"></script>
 
 </body>
 </html>

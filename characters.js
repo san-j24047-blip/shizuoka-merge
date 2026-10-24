@@ -6,7 +6,7 @@ const characters = [
     name: "川根本町",
     motif: "ゆず",
     radius: 18,
-    image: "images/kawane.png",
+    image: "images/yuzu-5.png",
     nextId: 2
   },
   {

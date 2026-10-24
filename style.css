@@ -335,3 +335,131 @@ h1 {
     font-size: 12px;
   }
 }
+
+/* ===== 画面切り替え ===== */
+
+[hidden] {
+    display: none !important;
+}
+
+.screen {
+    width: 100%;
+}
+
+/* ===== スタート・ランキング共通 ===== */
+
+.menu-screen,
+.ranking-screen {
+    min-height: 100vh;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 32px 16px;
+    background: linear-gradient(160deg, #edf6e6, #d3e8ce);
+}
+
+.menu-panel {
+    width: 100%;
+    max-width: 520px;
+    box-sizing: border-box;
+    padding: 40px 28px;
+    text-align: center;
+    background: #fffdf5;
+    border: 3px solid #a6c99b;
+    border-radius: 28px;
+    box-shadow: 0 10px 30px rgba(49, 91, 66, 0.12);
+}
+
+.menu-subtitle {
+    margin: 0 0 12px;
+    color: #63865b;
+    font-size: 12px;
+    font-weight: bold;
+    letter-spacing: 3px;
+}
+
+.menu-panel h1 {
+    margin: 0 0 16px;
+    color: #315b42;
+    font-size: clamp(26px, 5vw, 38px);
+    line-height: 1.4;
+}
+
+.menu-panel h2 {
+    margin: 0 0 24px;
+    color: #315b42;
+    font-size: 32px;
+}
+
+.menu-description {
+    margin-bottom: 30px;
+    color: #587052;
+    line-height: 1.8;
+}
+
+.menu-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    max-width: 320px;
+    margin: 0 auto;
+}
+
+.menu-button {
+    width: 100%;
+    min-height: 54px;
+    padding: 14px 20px;
+    border: none;
+    border-radius: 14px;
+    font-size: 17px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.15s, filter 0.15s;
+}
+
+.menu-button:hover {
+    filter: brightness(1.05);
+    transform: translateY(-2px);
+}
+
+.menu-button:focus-visible {
+    outline: 3px solid #e0a83c;
+    outline-offset: 3px;
+}
+
+.start-button {
+    color: white;
+    background: #4d8757;
+    box-shadow: 0 4px 0 #356b40;
+}
+
+.ranking-button {
+    color: #315b42;
+    background: #e7f1df;
+    border: 2px solid #a6c99b;
+}
+
+.ranking-placeholder {
+    padding: 24px 12px;
+    color: #6c7868;
+    background: #f1f5eb;
+    border-radius: 12px;
+    line-height: 1.7;
+}
+
+#ranking-list {
+    margin-bottom: 24px;
+}
+
+/* ===== スマートフォン ===== */
+
+@media (max-width: 480px) {
+    .menu-panel {
+        padding: 32px 20px;
+    }
+
+    .menu-panel h2 {
+        font-size: 28px;
+    }
+}
