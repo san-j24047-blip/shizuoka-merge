@@ -1,47 +1,54 @@
+
 <!DOCTYPE html>
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>しずおか ゆるキャラ合体ゲーム</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>静岡県スイカゲーム</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <main class="app">
-    <header>
-      <h1>しずおか ゆるキャラ合体ゲーム</h1>
-      <p>同じキャラをぶつけて合体させよう！</p>
-    </header>
+  <main class="game-container">
+    <h1>静岡県スイカゲーム</h1>
+    <p>同じキャラをくっつけて進化させよう！</p>
 
-    <section class="status">
-      <div>スコア <strong id="score">0</strong></div>
-      <div>次のキャラ <span id="next-character">🐻</span></div>
+    <section class="game-info">
+      <div class="score-area">
+        <span>スコア</span>
+        <span id="score">0</span>
+      </div>
+
+      <div class="next-area">
+        <span>つぎのキャラ</span>
+        <div id="next-character">準備中</div>
+      </div>
     </section>
 
-    <div class="game-wrap">
-      <canvas id="game" width="420" height="600"></canvas>
+    <section class="game-area">
+      <canvas id="game-canvas" width="420" height="600">
+        お使いのブラウザはCanvasに対応していません。
+      </canvas>
+
       <div id="game-over" class="game-over hidden">
-        <h2>ゲームオーバー！</h2>
-        <p>スコア：<span id="final-score">0</span></p>
-        <button id="restart">もう一度遊ぶ</button>
+        <h2>ゲームオーバー</h2>
+        <p>最終スコア：<span id="final-score">0</span></p>
+        <button id="restart-button">もう一度遊ぶ</button>
       </div>
-    </div>
+    </section>
 
-    <p class="help">
-      マウスや指で落とす位置を決め、クリック・タップで落とそう。
-    </p>
-
-    <section class="evolution">
-      <h2>キャラクター進化表</h2>
+    <section class="evolution-area">
+      <h2>進化一覧</h2>
       <div id="evolution-list"></div>
     </section>
   </main>
 
-  <!-- Matter.js：物理演算ライブラリ -->
+  <!-- 物理演算ライブラリ -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.20.0/matter.min.js"></script>
 
-  <!-- キャラ設定を先に読み込む -->
+  <!-- キャラデータを先に読み込む -->
   <script src="characters.js"></script>
+
+  <!-- ゲームの動作を読み込む -->
   <script src="game.js"></script>
 </body>
 </html>
