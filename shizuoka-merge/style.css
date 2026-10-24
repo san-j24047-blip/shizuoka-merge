@@ -29,9 +29,12 @@ button {
    ゲーム全体
 ========================= */
 
+
+/* ゲーム全体の横幅を拡大 */
+
 .game-container {
   width: 100%;
-  max-width: 560px;
+  max-width: 680px;
   margin: 0 auto;
   padding: 24px 20px;
   background: #ffffff;
@@ -39,6 +42,29 @@ button {
   border-radius: 24px;
   box-shadow: 0 8px 24px rgba(57, 92, 53, 0.10);
 }
+
+/* ゲーム画面の横幅を拡大 */
+
+.game-area {
+  position: relative;
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+  overflow: hidden;
+  background: #fffdf5;
+  border: 3px solid #b7d5a2;
+  border-radius: 14px;
+  line-height: 0;
+}
+
+#game-canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+  background: #fffdf5;
+  touch-action: manipulation;
+}
+
 
 h1 {
   margin: 0 0 8px;
