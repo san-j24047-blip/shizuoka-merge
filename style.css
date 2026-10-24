@@ -1,719 +1,134 @@
-
-/* =========================
-   1. 全体設定
-========================= */
-
-* {
-  box-sizing: border-box;
-}
-
-html {
-  min-height: 100%;
-}
-
+* { box-sizing: border-box; }
+html, body { min-height: 100%; }
 body {
-  margin: 0;
-  padding: 16px;
-  font-family: "Noto Sans JP", "Yu Gothic", Meiryo, sans-serif;
-  color: #35443a;
-  background: #f3f8ed;
-  text-align: center;
+  margin: 0; padding: 16px; font-family: "Noto Sans JP", "Yu Gothic", Meiryo, sans-serif;
+  color: #35443a; background: #f3f8ed; text-align: center;
 }
+button, input { font: inherit; }
+button { cursor: pointer; }
+[hidden] { display: none !important; }
+.screen { width: 100%; min-height: 100vh; }
 
-button,
-input {
-  font: inherit;
+.menu-screen, .ranking-screen {
+  min-height: 100vh; display: flex; align-items: center; justify-content: center;
+  padding: 24px 16px; background: linear-gradient(160deg, #edf6e6, #d3e8ce);
 }
-
-button {
-  cursor: pointer;
-}
-
-[hidden] {
-  display: none !important;
-}
-
-.screen {
-  width: 100%;
-  min-height: 100vh;
-}
-
-/* =========================
-   2. メニュー・ランキング画面
-========================= */
-
-.menu-screen,
-.ranking-screen {
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 24px 16px;
-  background: linear-gradient(160deg, #edf6e6, #d3e8ce);
-}
-
 .menu-panel {
-  width: 100%;
-  max-width: 520px;
-  padding: 36px 28px;
-  background: #fffdf5;
-  border: 3px solid #a6c99b;
-  border-radius: 28px;
-  box-shadow: 0 10px 30px rgba(49, 91, 66, 0.12);
-  text-align: center;
+  width: 100%; max-width: 520px; padding: 36px 28px; background: #fffdf5;
+  border: 3px solid #a6c99b; border-radius: 28px; box-shadow: 0 10px 30px #315b421f;
 }
+.menu-subtitle { margin: 0 0 12px; color: #63865b; font-size: 12px; font-weight: bold; letter-spacing: 3px; }
+.menu-panel h1 { margin: 0 0 16px; color: #315b42; font-size: clamp(26px, 4vw, 38px); }
+.menu-panel h2 { margin: 0 0 24px; color: #315b42; font-size: 30px; }
+.menu-description { margin-bottom: 30px; color: #587052; line-height: 1.8; }
+.menu-buttons { display: flex; flex-direction: column; gap: 14px; max-width: 320px; margin: 0 auto; }
+.menu-button { width: 100%; min-height: 52px; padding: 12px 20px; border: 0; border-radius: 14px; font-weight: bold; }
+.start-button { color: white; background: #4d8757; box-shadow: 0 4px #356b40; }
+.ranking-button { color: #315b42; background: #e7f1df; border: 2px solid #a6c99b; }
+.ranking-placeholder { padding: 20px 12px; color: #6c7868; background: #f1f5eb; border-radius: 12px; line-height: 1.7; }
+#ranking-list { margin-bottom: 24px; }
 
-.menu-subtitle {
-  margin: 0 0 12px;
-  color: #63865b;
-  font-size: 12px;
-  font-weight: bold;
-  letter-spacing: 3px;
-}
-
-.menu-panel h1 {
-  margin: 0 0 16px;
-  color: #315b42;
-  font-size: clamp(26px, 4vw, 38px);
-  line-height: 1.4;
-}
-
-.menu-panel h2 {
-  margin: 0 0 24px;
-  color: #315b42;
-  font-size: 30px;
-}
-
-.menu-description {
-  margin-bottom: 30px;
-  color: #587052;
-  line-height: 1.8;
-}
-
-.menu-buttons {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-  max-width: 320px;
-  margin: 0 auto;
-}
-
-.menu-button {
-  width: 100%;
-  min-height: 52px;
-  padding: 12px 20px;
-  border: none;
-  border-radius: 14px;
-  font-size: 16px;
-  font-weight: bold;
-  transition: transform 0.15s, filter 0.15s;
-}
-
-.menu-button:hover {
-  filter: brightness(1.05);
-  transform: translateY(-2px);
-}
-
-.menu-button:focus-visible {
-  outline: 3px solid #e0a83c;
-  outline-offset: 3px;
-}
-
-.start-button {
-  color: #fff;
-  background: #4d8757;
-  box-shadow: 0 4px 0 #356b40;
-}
-
-.ranking-button {
-  color: #315b42;
-  background: #e7f1df;
-  border: 2px solid #a6c99b;
-}
-
-.ranking-placeholder {
-  padding: 20px 12px;
-  color: #6c7868;
-  background: #f1f5eb;
-  border-radius: 12px;
-  line-height: 1.7;
-}
-
-#ranking-list {
-  margin-bottom: 24px;
-}
-
-/* =========================
-   3. ゲーム全体
-========================= */
-
+/* PCゲーム画面はビューポート内に固定 */
+#game-screen:not([hidden]) { position: fixed; inset: 0; z-index: 100; height: 100dvh; min-height: 0; overflow: hidden; }
 .game-container {
-  width: 100%;
-  max-width: 1600px;
-  margin: 0 auto;
-  padding: 8px 0 16px;
-  background: transparent;
-  border: none;
-  box-shadow: none;
+  width: 100%; height: 100%; max-width: 1600px; margin: 0 auto; padding: 8px 12px 12px;
+  display: flex; flex-direction: column; align-items: center;
 }
-
-.game-container > h1 {
-  margin: 0 0 6px;
-  color: #477b43;
-  font-size: clamp(24px, 2.2vw, 34px);
-}
-
-.game-container > p {
-  margin: 0 0 16px;
-  color: #71816c;
-  font-size: 14px;
-}
-
-/* =========================
-   4. 3列レイアウト
-   左：進化一覧
-   中：ゲーム画面
-   右：スコア・次のキャラ
-========================= */
-
+.game-container > h1 { margin: 0 0 3px; color: #477b43; font-size: clamp(22px, 2.5vh, 30px); line-height: 1.25; }
+.game-container > p { margin: 0 0 8px; color: #71816c; font-size: 13px; }
 .game-layout {
-  display: grid;
-  grid-template-columns: 320px minmax(400px, 600px) 180px;
-  gap: 24px;
-  align-items: start;
-  justify-content: center;
-  width: 100%;
-  margin: 0 auto;
+  display: grid; grid-template-columns: minmax(260px, 320px) minmax(260px, min(500px, calc((100dvh - 110px) * .7143), calc(100vw - 600px))) minmax(140px, 180px);
+  gap: clamp(10px, 1.5vw, 22px); align-items: center; justify-content: center;
+  width: 100%; max-width: 1440px; min-height: 0; flex: 1;
 }
-
-/* =========================
-   5. 左側：進化一覧
-========================= */
-
-.game-layout > .evolution-area {
-  position: relative;
-  width: 100%;
-  height: 390px;
-  min-width: 0;
-  margin: 0;
-  padding: 14px 8px;
-  overflow: hidden;
-  background: #fff;
-  border: 2px solid #d9e9ca;
-  border-radius: 22px;
-  box-shadow: 0 8px 24px rgba(57, 92, 53, 0.08);
-  text-align: center;
+.evolution-area {
+  position: relative; width: 100%; height: min(74vh, 500px); min-height: 300px; padding: 10px 6px;
+  overflow: hidden; background: white; border: 2px solid #d9e9ca; border-radius: 20px;
+  box-shadow: 0 8px 24px #395c3514;
 }
-
-.evolution-area h2 {
-  position: relative;
-  z-index: 2;
-  margin: 0;
-  color: #477b43;
-  font-size: 22px;
-}
-
-/* 円形配置の土台 */
-#evolution-list {
-  position: relative;
-  width: 100%;
-  max-width: 300px;
-  height: 330px;
-  margin: 4px auto 0;
-  padding: 0;
-  overflow: visible;
-}
-
-/* キャラクターカード */
+.evolution-area h2 { position: relative; z-index: 2; margin: 0; color: #477b43; font-size: 19px; }
+#evolution-list { position: absolute; inset: 36px 0 4px; }
 .evolution-item {
-  position: absolute;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 2px;
-  width: 76px;
-  height: 82px;
-  padding: 4px 3px;
-  overflow: hidden;
-  background: #f7faf2;
-  border: 1px solid #dceacb;
-  border-radius: 13px;
-  text-align: center;
-  transform: translate(-50%, -50%);
+  position: absolute; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px;
+  width: 72px; height: 78px; padding: 3px; overflow: hidden; transform: translate(-50%, -50%);
+  background: #f7faf2; border: 1px solid #dceacb; border-radius: 12px;
 }
+.evolution-stage { color: #628358; font-size: 9px; line-height: 1; }
+.evolution-image { display: block; flex: none; width: 34px; height: 34px; object-fit: contain; }
+.evolution-name, .evolution-motif { width: 100%; overflow-wrap: anywhere; line-height: 1.08; }
+.evolution-name { color: #35443a; font-size: 9px; font-weight: bold; }
+.evolution-motif { color: #71816c; font-size: 8px; }
 
-/* 11段階を円形に配置 */
-.evolution-item:nth-child(1) {
-  top: 10%;
-  left: 50%;
+.game-area {
+  position: relative; width: 100%; max-width: 500px; justify-self: center; overflow: hidden;
+  background: #fffdf5; border: 3px solid #b7d5a2; border-radius: 14px; line-height: 0;
 }
-
-.evolution-item:nth-child(2) {
-  top: 14%;
-  left: 75%;
+#game-canvas { display: block; width: 100%; height: auto; background: #fffdf5; touch-action: none; }
+.game-sidebar { width: 100%; }
+.game-info { display: flex; flex-direction: column; gap: 12px; }
+.score-area, .next-area {
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px;
+  min-height: 105px; padding: 14px 8px; background: #f1f7e9; border: 2px solid #dceacb; border-radius: 16px;
 }
-
-.evolution-item:nth-child(3) {
-  top: 32%;
-  left: 91%;
-}
-
-.evolution-item:nth-child(4) {
-  top: 55%;
-  left: 91%;
-}
-
-.evolution-item:nth-child(5) {
-  top: 77%;
-  left: 75%;
-}
-
-.evolution-item:nth-child(6) {
-  top: 89%;
-  left: 50%;
-}
-
-.evolution-item:nth-child(7) {
-  top: 77%;
-  left: 25%;
-}
-
-.evolution-item:nth-child(8) {
-  top: 55%;
-  left: 9%;
-}
-
-.evolution-item:nth-child(9) {
-  top: 32%;
-  left: 9%;
-}
-
-.evolution-item:nth-child(10) {
-  top: 14%;
-  left: 25%;
-}
-
-.evolution-item:nth-child(11) {
-  top: 10%;
-  left: 50%;
-  transform: translate(-50%, -50%) scale(0.88);
-}
-
-/* 画像・文字 */
-.evolution-stage {
-  color: #628358;
-  font-size: 9px;
-  line-height: 1.1;
-}
-
-.evolution-image {
-  display: block;
-  flex-shrink: 0;
-  width: 38px;
-  height: 38px;
-  object-fit: contain;
-}
-
-.evolution-name {
-  width: 100%;
-  color: #35443a;
-  font-size: 9px;
-  font-weight: bold;
-  line-height: 1.15;
-  overflow-wrap: anywhere;
-}
-
-.evolution-motif {
-  width: 100%;
-  color: #71816c;
-  font-size: 9px;
-  line-height: 1.1;
-  overflow-wrap: anywhere;
-}
-
-/* =========================
-   6. 中央：ゲーム画面
-========================= */
-
-.game-layout > .game-area {
-  position: relative;
-  width: 100%;
-  min-width: 0;
-  max-width: 600px;
-  margin: 0;
-  overflow: hidden;
-  background: #fffdf5;
-  border: 3px solid #b7d5a2;
-  border-radius: 16px;
-  line-height: 0;
-}
-
-#game-canvas {
-  display: block;
-  width: 100%;
-  height: auto;
-  background: #fffdf5;
-  touch-action: manipulation;
-}
-
-/* =========================
-   7. 右側：スコア・次のキャラ
-========================= */
-
-.game-layout > .game-sidebar {
-  width: 100%;
-  min-width: 0;
-  margin: 0;
-  padding-top: 0;
-}
-
-.game-info {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  margin: 0;
-}
-
-.score-area,
-.next-area {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  width: 100%;
-  min-width: 0;
-  min-height: 120px;
-  padding: 18px 10px;
-  background: #f1f7e9;
-  border: 2px solid #dceacb;
-  border-radius: 18px;
-}
-
-.score-area span:first-child,
-.next-area > span {
-  color: #61755a;
-  font-size: 13px;
-  font-weight: bold;
-}
-
-#score {
-  color: #3e793b;
-  font-size: 34px;
-  font-weight: bold;
-  font-variant-numeric: tabular-nums;
-}
-
-#next-character {
-  min-height: 30px;
-  color: #3e793b;
-  font-size: 18px;
-  font-weight: bold;
-  overflow-wrap: anywhere;
-}
-
-/* =========================
-   8. ゲームオーバー
-========================= */
-
+.score-area span:first-child, .next-area > span { color: #61755a; font-size: 13px; font-weight: bold; }
+#score { color: #3e793b; font-size: 30px; font-weight: bold; font-variant-numeric: tabular-nums; }
+#next-character { min-height: 28px; color: #3e793b; font-size: 17px; font-weight: bold; overflow-wrap: anywhere; }
 .game-over {
-  position: absolute;
-  inset: 0;
-  z-index: 10;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 14px;
-  padding: 16px;
-  overflow-y: auto;
-  background: rgba(255, 253, 245, 0.96);
-  line-height: 1.5;
+  position: absolute; inset: 0; z-index: 10; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 9px; padding: 12px; overflow-y: auto; background: #fffdf5f5; line-height: 1.35;
 }
-
-.game-over h2 {
-  margin: 0;
-  color: #477b43;
-  font-size: 26px;
+.game-over h2 { margin: 0; color: #477b43; font-size: 24px; }
+.game-over p { margin: 0; font-size: 15px; }
+#score-registration, #score-registration-form { display: flex; flex-direction: column; align-items: center; gap: 7px; width: 100%; }
+#score-registration-form[hidden] { display: none !important; }
+#score-player-name { width: 100%; max-width: 260px; padding: 8px; border: 1px solid #b7d5a2; border-radius: 8px; }
+#register-score-button, #skip-registration-button, #submit-score-button, #cancel-registration-button, #restart-button, .return-menu-button {
+  padding: 9px 15px; color: white; background: #5c9a50; border: 0; border-radius: 999px; font-size: 13px; font-weight: bold;
 }
-
-.game-over p {
-  margin: 0;
-  font-size: 16px;
-}
-
-#score-registration,
-#score-registration-form {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
-  width: 100%;
-}
-
-#score-registration-form[hidden] {
-  display: none !important;
-}
-
-#score-player-name {
-  width: 100%;
-  max-width: 260px;
-  padding: 10px;
-  border: 1px solid #b7d5a2;
-  border-radius: 8px;
-  background: #fff;
-}
-
-#register-score-button,
-#skip-registration-button,
-#submit-score-button,
-#cancel-registration-button,
-#restart-button {
-  padding: 10px 18px;
-  color: #fff;
-  background: #5c9a50;
-  border: none;
-  border-radius: 999px;
-  font-size: 14px;
-  font-weight: bold;
-}
-
-#skip-registration-button,
-#cancel-registration-button {
-  color: #315b42;
-  background: #e7f1df;
-}
-
-#restart-button {
-  margin-top: 4px;
-  padding: 12px 22px;
-  font-size: 15px;
-  box-shadow: 0 4px 0 #3f7838;
-}
-
-#restart-button:hover {
-  background: #4b8842;
-}
-
-#submit-score-button:disabled {
-  cursor: wait;
-  opacity: 0.6;
-}
-
-#score-registration-message {
-  color: #477b43;
-  font-size: 13px !important;
-  overflow-wrap: anywhere;
-}
-
-.hidden {
-  display: none !important;
-}
-
-/* =========================
-   9. 小さめのPC・ノートPC
-========================= */
-
-@media (max-width: 1200px) {
-  body {
-    padding: 12px;
-  }
-
-  .game-layout {
-    grid-template-columns: 250px minmax(320px, 1fr) 150px;
-    gap: 14px;
-  }
-
-  .game-layout > .evolution-area {
-    height: 350px;
-  }
-
-  #evolution-list {
-    height: 290px;
-  }
-
-  .evolution-item {
-    width: 66px;
-    height: 74px;
-  }
-
-  .evolution-image {
-    width: 32px;
-    height: 32px;
-  }
-
-  .game-info {
-    gap: 12px;
-  }
-
-  .score-area,
-  .next-area {
-    min-height: 105px;
-    padding: 12px 6px;
-  }
-
-  #score {
-    font-size: 28px;
-  }
-
-  #next-character {
-    font-size: 15px;
-  }
-}
-
-/* =========================
-   10. タブレット
-========================= */
+#skip-registration-button, #cancel-registration-button, .return-menu-button { color: #315b42; background: #e7f1df; }
+#restart-button { margin-top: 2px; box-shadow: 0 3px #3f7838; }
+#submit-score-button:disabled { cursor: default; opacity: .6; }
+#score-registration-message { color: #477b43; font-size: 12px !important; overflow-wrap: anywhere; }
+.hidden { display: none !important; }
 
 @media (max-width: 900px) {
-  .game-container {
-    padding-top: 8px;
-  }
-
-  .game-layout {
-    grid-template-columns: 220px minmax(0, 1fr);
-    gap: 16px;
-  }
-
-  .game-layout > .evolution-area {
-    grid-column: 1;
-    grid-row: 1 / span 2;
-    height: 340px;
-  }
-
-  #evolution-list {
-    height: 285px;
-  }
-
-  .game-layout > .game-area {
-    grid-column: 2;
-    grid-row: 1;
-  }
-
-  .game-layout > .game-sidebar {
-    grid-column: 2;
-    grid-row: 2;
-  }
-
-  .game-info {
-    flex-direction: row;
-  }
-
-  .score-area,
-  .next-area {
-    flex: 1;
-    min-height: 90px;
-  }
+  body { padding: 8px; }
+  #game-screen:not([hidden]) { position: fixed; inset: 0; z-index: 100; height: 100dvh; min-height: 0; overflow: hidden; }
+  .game-container { min-height: 0; height: 100%; padding: 8px 4px; }
+  .game-layout { grid-template-columns: minmax(0, 1fr) 140px; grid-template-rows: minmax(0, 1fr) minmax(220px, 42dvh); flex: 1; min-height: 0; }
+  .game-area { grid-column: 1; grid-row: 1; width: min(100%, calc((100dvh - 360px) * .7143)); max-height: calc(100dvh - 360px); }
+  .game-sidebar { grid-column: 2; grid-row: 1; }
+  .game-info { gap: 8px; }
+  .evolution-area { grid-column: 1 / -1; grid-row: 2; width: min(100%, 390px); height: 100%; min-height: 0; justify-self: center; }
+  #evolution-list { inset: 36px 0 4px; }
+}
+@media (max-width: 520px) {
+  .game-layout { grid-template-columns: minmax(0, 1fr) 108px; grid-template-rows: minmax(0, 1fr) minmax(205px, 40dvh); gap: 7px; }
+  .game-info { gap: 7px; }
+  .score-area, .next-area { min-height: 82px; padding: 8px 4px; }
+  #score { font-size: 24px; }
+  #next-character { font-size: 14px; }
+  .game-area { width: min(100%, calc((100dvh - 390px) * .7143)); max-height: calc(100dvh - 390px); }
+  .evolution-area { width: 100%; height: 100%; }
+  .evolution-item { width: 58px; height: 64px; }
+  .evolution-image { width: 30px; height: 30px; }
+  .evolution-name { font-size: 8px; }
+}
+@media (max-height: 650px) and (min-width: 901px) {
+  .game-container { padding-top: 4px; padding-bottom: 4px; }
+  .game-container > p { margin-bottom: 3px; }
+  .evolution-area { height: 70vh; min-height: 270px; }
+  .score-area, .next-area { min-height: 84px; padding: 9px 6px; }
+  .game-over { gap: 5px; }
+  .game-over h2 { font-size: 20px; }
+  .game-over p { font-size: 13px; }
+}
+@media (max-width: 520px) {
+  .menu-panel { padding: 32px 20px; }
+  .menu-panel h2 { font-size: 28px; }
 }
 
-/* =========================
-   11. スマートフォン
-========================= */
 
-@media (max-width: 600px) {
-  body {
-    padding: 8px;
-  }
 
-  .game-container {
-    padding: 8px 0 16px;
-  }
 
-  .game-container > h1 {
-    font-size: 24px;
-  }
 
-  .game-container > p {
-    margin-bottom: 12px;
-    font-size: 12px;
-  }
-
-  .game-layout {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 14px;
-  }
-
-  .game-layout > .game-area {
-    grid-column: 1;
-    grid-row: 1;
-    width: 100%;
-  }
-
-  .game-layout > .game-sidebar {
-    grid-column: 1;
-    grid-row: 2;
-  }
-
-  .game-info {
-    flex-direction: row;
-    gap: 10px;
-  }
-
-  .score-area,
-  .next-area {
-    min-height: 85px;
-    padding: 10px 6px;
-  }
-
-  #score {
-    font-size: 25px;
-  }
-
-  #next-character {
-    font-size: 14px;
-  }
-
-  .game-layout > .evolution-area {
-    grid-column: 1;
-    grid-row: 3;
-    width: 100%;
-    max-width: 340px;
-    height: 390px;
-    margin: 0 auto;
-  }
-
-  #evolution-list {
-    height: 330px;
-  }
-
-  .evolution-item {
-    width: 72px;
-    height: 78px;
-  }
-
-  .evolution-image {
-    width: 36px;
-    height: 36px;
-  }
-}
-
-/* =========================
-   12. とても狭い画面
-========================= */
-
-@media (max-width: 360px) {
-  .game-layout > .evolution-area {
-    height: 350px;
-  }
-
-  #evolution-list {
-    height: 290px;
-  }
-
-  .evolution-item {
-    width: 60px;
-    height: 68px;
-  }
-
-  .evolution-image {
-    width: 30px;
-    height: 30px;
-  }
-
-  .evolution-stage,
-  .evolution-name,
-  .evolution-motif {
-    font-size: 8px;
-  }
-}

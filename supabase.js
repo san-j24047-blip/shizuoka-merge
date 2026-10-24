@@ -30,6 +30,16 @@ const cancelRegistrationButton =
 const registrationMessage =
     document.getElementById("score-registration-message");
 
+let scoreSubmittedThisGame = false;
+
+document.addEventListener("shizuoka:new-game", () => {
+    scoreSubmittedThisGame = false;
+    submitScoreButton.disabled = false;
+    registrationArea.hidden = false;
+    registrationForm.hidden = true;
+    registrationMessage.textContent = "";
+});
+
 // 前回のプレイヤー名を読み込む
 const savedPlayerName = localStorage.getItem("playerName");
 
@@ -60,6 +70,8 @@ cancelRegistrationButton.addEventListener("click", () => {
 
 // スコアを登録する
 submitScoreButton.addEventListener("click", async () => {
+    if (scoreSubmittedThisGame || submitScoreButton.disabled) return;
+
     const playerName = playerNameInput.value.trim();
 
     const scoreElement = document.getElementById("final-score");
@@ -97,6 +109,8 @@ submitScoreButton.addEventListener("click", async () => {
 
         // 登録成功後に名前を保存
         localStorage.setItem("playerName", playerName);
+        scoreSubmittedThisGame = true;
+        submitScoreButton.disabled = true;
 
         registrationMessage.textContent =
             "ランキングに登録しました！";
@@ -108,7 +122,7 @@ submitScoreButton.addEventListener("click", async () => {
         registrationMessage.textContent =
             "通信に失敗しました。接続を確認してください。";
     } finally {
-        submitScoreButton.disabled = false;
+        submitScoreButton.disabled = scoreSubmittedThisGame;
     }
 });
 

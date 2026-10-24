@@ -85,7 +85,7 @@ const characters = [
     id: 10,
     stage: 10,
     name: "浜松市",
-    motif: "ピアノ",
+    motif: "餃子",
     radius: 94,
     image: "images/餃子.png",
     nextId: 11

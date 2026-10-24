@@ -9,6 +9,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const startButton = document.getElementById("start-button");
     const rankingButton = document.getElementById("ranking-button");
     const backButton = document.getElementById("back-button");
+    const returnMenuButton = document.getElementById("return-menu-button");
 
     // 必要なHTML要素があるか確認
     if (
@@ -33,6 +34,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // ゲームスタート
     startButton.addEventListener("click", () => {
         showScreen(gameScreen);
+        window.startShizuokaGame?.();
     });
 
     // ランキングを表示
@@ -42,6 +44,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // メニューに戻る
     backButton.addEventListener("click", () => {
+        showScreen(menuScreen);
+    });
+
+    returnMenuButton?.addEventListener("click", () => {
         showScreen(menuScreen);
     });
 

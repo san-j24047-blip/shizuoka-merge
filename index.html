@@ -47,67 +47,61 @@
     </div>
   </section>
   <section id="game-screen" class="screen" hidden>
-
-
     <main class="game-container">
       <h1>静岡県スイカゲーム</h1>
       <p>同じキャラをくっつけて進化させよう！</p>
 
       <div class="game-layout">
-
-        <!-- 左側：大きな進化一覧 -->
-        <aside class="evolution-area">
+        <section class="evolution-area">
           <h2>進化一覧</h2>
           <div id="evolution-list"></div>
-        </aside>
+        </section>
 
-        <!-- 中央：ゲーム専用エリア -->
         <section class="game-area">
           <canvas id="game-canvas" width="500" height="700">
             お使いのブラウザはCanvasに対応していません。
           </canvas>
 
-          <div id="game-over" class="game-over hidden">
-            <h2>ゲームオーバー</h2>
-            <p>最終スコア：<span id="final-score">0</span></p>
 
-            <div id="score-registration">
-              <p>ランキングに登録しますか？</p>
-              <button id="register-score-button">登録する</button>
-              <button id="skip-registration-button">登録しない</button>
-            </div>
+        <div id="game-over" class="game-over hidden">
+          <h2>ゲームオーバー</h2>
+          <p>最終スコア：<span id="final-score">0</span></p>
 
-            <div id="score-registration-form" hidden>
-              <label for="score-player-name">プレイヤー名（1〜12文字）</label>
-              <input type="text" id="score-player-name" maxlength="12" placeholder="名前を入力">
-              <button id="submit-score-button">ランキングに登録</button>
-              <p id="score-registration-message"></p>
-              <button id="cancel-registration-button">戻る</button>
-            </div>
-
-            <button id="restart-button">もう一度遊ぶ</button>
+          <div id="score-registration">
+            <p>ランキングに登録しますか？</p>
+            <button id="register-score-button">登録する</button>
+            <button id="skip-registration-button">登録しない</button>
           </div>
+
+          <div id="score-registration-form" hidden>
+            <label for="score-player-name">
+              プレイヤー名（1〜12文字）
+            </label>
+            <input type="text" id="score-player-name" maxlength="12" placeholder="名前を入力">
+            <button id="submit-score-button">ランキングに登録</button>
+            <p id="score-registration-message"></p>
+            <button id="cancel-registration-button">戻る</button>
+          </div>
+
+          <button id="restart-button">もう一度遊ぶ</button>
+          <button id="return-menu-button" class="return-menu-button">メインメニューへ</button>
+        </div>
         </section>
 
-        <!-- 右側：スコアと次のキャラ -->
         <aside class="game-sidebar">
           <section class="game-info">
             <div class="score-area">
               <span>スコア</span>
               <span id="score">0</span>
             </div>
-
             <div class="next-area">
               <span>つぎのキャラ</span>
               <div id="next-character">準備中</div>
             </div>
           </section>
         </aside>
-
       </div>
     </main>
-
-
   </section>
 
   <!-- 物理演算ライブラリ -->
@@ -119,67 +113,46 @@
   <script src="characters.js"></script>
   <script src="menu.js"></script>
   <script src="supabase.js"></script>
+  <script src="shape.js"></script>
+  <script src="physics.js"></script>
   <script src="game.js"></script>
 
   <!-- 進化一覧の表示 -->
   <script>
-
     const evolutionList = document.getElementById("evolution-list");
 
-    function renderEvolutionList() {
-      evolutionList.replaceChildren();
+    characters.forEach((character) => {
+      const item = document.createElement("div");
+      item.className = "evolution-item";
 
-      const isDesktop = window.innerWidth > 900;
+      const stage = document.createElement("div");
+      stage.className = "evolution-stage";
+      stage.textContent = `第${character.stage}段階`;
 
-      characters.forEach((character, index) => {
-        const item = document.createElement("div");
-        item.className = "evolution-item";
+      const image = document.createElement("img");
+      image.className = "evolution-image";
+      image.src = character.image;
+      image.alt = character.motif;
+      image.onerror = () => {
+        image.style.display = "none";
+      };
 
-        const stage = document.createElement("div");
-        stage.className = "evolution-stage";
-        stage.textContent = `${character.stage}段階`;
+      const name = document.createElement("div");
+      name.className = "evolution-name";
+      name.textContent = character.name;
 
-        const image = document.createElement("img");
-        image.className = "evolution-image";
-        image.src = character.image;
-        image.alt = character.motif;
-        image.onerror = () => {
-          image.style.visibility = "hidden";
-        };
+      const motif = document.createElement("div");
+      motif.className = "evolution-motif";
+      motif.textContent = character.motif;
 
-        const name = document.createElement("div");
-        name.className = "evolution-name";
-        name.textContent = character.name;
-        name.title = character.name;
-
-        const motif = document.createElement("div");
-        motif.className = "evolution-motif";
-        motif.textContent = character.motif;
-
-        item.append(stage, image, name, motif);
-
-        if (isDesktop) {
-          // 11体を円周上に均等に配置する
-          const angle =
-            (2 * Math.PI * index) / characters.length - Math.PI / 2;
-
-          const radius = 39;
-          const x = 50 + radius * Math.cos(angle);
-          const y = 50 + radius * Math.sin(angle);
-
-          item.style.left = `${x}%`;
-          item.style.top = `${y}%`;
-        }
-
-        evolutionList.appendChild(item);
-      });
-    }
-
-    renderEvolutionList();
-
-    window.addEventListener("resize", renderEvolutionList);
+      item.append(stage, image, name, motif);
+      const angle = (2 * Math.PI * (character.stage - 1)) / characters.length - Math.PI / 2;
+      item.style.left = `${50 + 39 * Math.cos(angle)}%`;
+      item.style.top = `${50 + 39 * Math.sin(angle)}%`;
+      evolutionList.appendChild(item);
+    });
   </script>
 
-</body >
+</body>
 
-</html >
+</html>
