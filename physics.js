@@ -153,7 +153,7 @@ const Physics = (() => {
       Composite.add(engine.world, merged);
       bodies.add(merged);
 
-      if (onMerge) onMerge(characterMap.get(current.nextId));
+      if (onMerge) onMerge(characterMap.get(current.nextId), x, y);
     }
 
     pendingMerges = [];

@@ -19,6 +19,7 @@ let lastDropTime = 0;
 let gameOver = false;
 let lastFrameTime = 0;
 let debugShapes = false; // D キーで当たり判定を一時表示
+let mergeEffects = [];
 
 /* =========================
    画像の読み込み
@@ -147,9 +148,27 @@ function randomSmallCharacterId() {
   return characters[Math.floor(Math.random() * SMALL_CHARACTER_COUNT)].id;
 }
 
-function handleMerge(newCharacter) {
+function handleMerge(newCharacter, x, y) {
   score += newCharacter.score ?? newCharacter.stage;
   updateScore();
+  createMergeEffect(x, y, newCharacter.stage);
+}
+
+function createMergeEffect(x, y, stage) {
+  const colors = ["#ffd166", "#ff9f43", "#8bcf7a", "#ffffff"];
+  const now = performance.now();
+  const particles = Array.from({ length: 14 }, (_, index) => {
+    const angle = (Math.PI * 2 * index) / 14 + Math.random() * 0.18;
+    const speed = 35 + Math.random() * 75;
+    return {
+      vx: Math.cos(angle) * speed,
+      vy: Math.sin(angle) * speed - 18,
+      size: 2.5 + Math.random() * 3.5,
+      color: colors[Math.floor(Math.random() * colors.length)]
+    };
+  });
+
+  mergeEffects.push({ x, y, stage, startedAt: now, particles });
 }
 
 function dropCharacter() {
@@ -253,6 +272,47 @@ function draw() {
     drawCharacter(getCharacter(s.id), s.x, s.y, 1, s.angle);
   }
 
+  drawMergeEffects(performance.now());
+
+}
+
+function drawMergeEffects(now) {
+  mergeEffects = mergeEffects.filter((effect) => now - effect.startedAt < 620);
+
+  for (const effect of mergeEffects) {
+    const elapsed = now - effect.startedAt;
+    const progress = elapsed / 620;
+    const alpha = 1 - progress;
+
+    ctx.save();
+    ctx.globalAlpha = Math.max(0, alpha);
+    ctx.strokeStyle = effect.stage >= 8 ? "#fff2a6" : "#ffffff";
+    ctx.lineWidth = 3 - progress * 1.5;
+    ctx.beginPath();
+    ctx.arc(effect.x, effect.y, 8 + progress * 34, 0, Math.PI * 2);
+    ctx.stroke();
+
+    for (const particle of effect.particles) {
+      const px = effect.x + particle.vx * progress * 0.62;
+      const py = effect.y + particle.vy * progress * 0.62 + 24 * progress * progress;
+      ctx.fillStyle = particle.color;
+      ctx.beginPath();
+      ctx.arc(px, py, particle.size * (1 - progress * 0.45), 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    if (elapsed < 300) {
+      ctx.fillStyle = "#fff8d9";
+      ctx.strokeStyle = "#e2a83d";
+      ctx.lineWidth = 1.5;
+      ctx.font = "bold 16px sans-serif";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.strokeText("合体！", effect.x, effect.y - 26 - progress * 8);
+      ctx.fillText("合体！", effect.x, effect.y - 26 - progress * 8);
+    }
+    ctx.restore();
+  }
 }
 
 // x, y はボディの位置(= 円の重心)
@@ -351,6 +411,7 @@ function gameLoop(time) {
 function startGame() {
   score = 0;
   gameOver = false;
+  mergeEffects = [];
   lastDropTime = 0;
   lastFrameTime = 0;
   pointerX = WIDTH / 2;
