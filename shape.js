@@ -12,7 +12,7 @@ const SHAPE_FILL_THRESHOLD = 0.25;
 const SHAPE_ALPHA_THRESHOLD = 0.8;
 
 // 円のスケール (★1.0より少し小さく(0.70〜0.80)にすることでパーツ同士の過度な重なりを防ぎます)
-const SHAPE_CIRCLE_SCALE = 0.75;
+const SHAPE_CIRCLE_SCALE = 1.4;
 
 // 中心を重心に寄せる
 const SHAPE_USE_CENTROID = true;

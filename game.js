@@ -3,6 +3,7 @@ const ctx = canvas.getContext("2d");
 
 const WIDTH = canvas.width;
 const HEIGHT = canvas.height;
+const PLAYFIELD = { left: 0, right: WIDTH, bottom: HEIGHT };
 const DROP_Y = 48;
 const GAME_OVER_Y = 65;
 const DROP_INTERVAL = 450;
@@ -25,6 +26,7 @@ let debugShapes = false; // D キーで当たり判定を一時表示
 
 const imageCache = new Map();
 const shapes = new Map(); // id → 円のリスト
+let dropperImage = null;
 
 function loadImage(src) {
   return new Promise((resolve) => {
@@ -60,6 +62,46 @@ async function loadAssets() {
       }
     })
   );
+
+  dropperImage = await loadImage("images/shizuoka-3.png");
+  if (dropperImage) {
+    // 白背景だけを外側から透明化し、キャラクター内の白い目は残す
+    const temp = document.createElement("canvas");
+    temp.width = dropperImage.naturalWidth;
+    temp.height = dropperImage.naturalHeight;
+    const tempContext = temp.getContext("2d", { willReadFrequently: true });
+    tempContext.drawImage(dropperImage, 0, 0);
+    const pixels = tempContext.getImageData(0, 0, temp.width, temp.height);
+    const { data, width, height } = pixels;
+    const queue = new Int32Array(width * height);
+    let head = 0;
+    let tail = 0;
+    const addIfBackground = (index) => {
+      const offset = index * 4;
+      if (data[offset + 3] && data[offset] > 247 && data[offset + 1] > 247 && data[offset + 2] > 247) {
+        data[offset + 3] = 0;
+        queue[tail++] = index;
+      }
+    };
+    for (let x = 0; x < width; x++) {
+      addIfBackground(x);
+      addIfBackground((height - 1) * width + x);
+    }
+    for (let y = 1; y < height - 1; y++) {
+      addIfBackground(y * width);
+      addIfBackground(y * width + width - 1);
+    }
+    while (head < tail) {
+      const index = queue[head++];
+      const x = index % width;
+      if (x > 0) addIfBackground(index - 1);
+      if (x < width - 1) addIfBackground(index + 1);
+      if (index >= width) addIfBackground(index - width);
+      if (index < width * (height - 1)) addIfBackground(index + width);
+    }
+    tempContext.putImageData(pixels, 0, 0);
+    dropperImage = await loadImage(temp.toDataURL("image/png"));
+  }
 }
 
 /* =========================
@@ -152,7 +194,7 @@ function updatePreview() {
 ========================= */
 
 function clampX(x, radius) {
-  return Math.max(radius, Math.min(WIDTH - radius, x));
+  return Math.max(PLAYFIELD.left + radius, Math.min(PLAYFIELD.right - radius, x));
 }
 
 function drawShapeCircles(g, circles, scale = 1) {
@@ -178,9 +220,6 @@ function drawShapeCircles(g, circles, scale = 1) {
 function draw() {
   ctx.clearRect(0, 0, WIDTH, HEIGHT);
 
-  ctx.fillStyle = "#e7f4fa";
-  ctx.fillRect(0, 0, WIDTH, HEIGHT);
-
   ctx.save();
   ctx.setLineDash([7, 5]);
   ctx.strokeStyle = "#e18b83";
@@ -199,17 +238,21 @@ function draw() {
     ctx.strokeStyle = "#8aa7b2";
     ctx.setLineDash([4, 5]);
     ctx.beginPath();
-    ctx.moveTo(x, DROP_Y + character.radius);
+    ctx.moveTo(x, DROP_Y + character.radius + 18);
     ctx.lineTo(x, HEIGHT - 5);
     ctx.stroke();
     ctx.restore();
 
-    drawCharacter(character, x, DROP_Y, 0.75);
+    if (dropperImage) {
+      ctx.drawImage(dropperImage, x - 28, 3, 56, 56);
+    }
+    drawCharacter(character, x, DROP_Y + 10, 0.65);
   }
 
   for (const s of Physics.getCharacterStates()) {
     drawCharacter(getCharacter(s.id), s.x, s.y, 1, s.angle);
   }
+
 }
 
 // x, y はボディの位置(= 円の重心)
@@ -324,6 +367,7 @@ function startGame() {
   Physics.init({
     width: WIDTH,
     height: HEIGHT,
+    playfield: PLAYFIELD,
     characters,
     shapes,
     onMerge: handleMerge
