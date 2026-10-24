@@ -113,10 +113,15 @@ submitScoreButton.addEventListener("click", async () => {
         submitScoreButton.disabled = true;
 
         registrationMessage.textContent =
-            "ランキングに登録しました！";
+            "ランキングに登録しました！メニューに戻ります...";
 
         // ランキングデータを更新
         await loadOnlineRanking();
+
+        // 成功メッセージを短く表示してからメインメニューへ戻る
+        window.setTimeout(() => {
+            document.getElementById("return-menu-button")?.click();
+        }, 1200);
     } catch (error) {
         console.error("通信エラー:", error);
         registrationMessage.textContent =
