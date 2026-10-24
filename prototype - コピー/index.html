@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>キャンバスアプリ</title>
+
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <div id="game-container" style="position: relative;">
+        <canvas id="canvas"></canvas>
+
+        <div id="ui-container">
+            <div id="dashboard">
+                <div class="dashboard-item">温度: <span id="temp-value">20.0</span> ℃</div>
+            </div>
+
+           <div id="control-panel">
+    <button class="control-btn" id="drop-btn">
+        投下 <span class="limit-badge" id="drop-count">100</span>
+    </button>
+</div>
+        </div>
+    </div>
+
+    <script src="script/main.js"></script>
+    <script src="script/event.js"></script>
+</body>
+
+</html>
